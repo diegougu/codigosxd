@@ -129,7 +129,21 @@ void CBinTree::Filas(vector<int>& valores, CBinNode* ptr, CBinNode* ptr2, CBinNo
             valores.push_back(ptr4->value);
 
         }
+        if(ptr == nullptr && ptr3 != nullptr){
+            ptr = ptr3;
+        }
         
+        if(ptr != nullptr && ptr3 == nullptr){
+            ptr3 = ptr;
+        }
+        
+        if(ptr2 == nullptr && ptr4 != nullptr){
+            ptr2 = ptr4;
+        }
+        
+        if(ptr2 != nullptr && ptr4 == nullptr){
+            ptr4 = ptr2;
+        }
         
         Filas(valores, ptr->nodes[0], ptr2->nodes[0], ptr->nodes[1], ptr2->nodes[1]);
     }
@@ -159,6 +173,7 @@ int main()
     t.Insert(20);
     t.Insert(1);
     t.Insert(200);
+    t.Insert(300);
     t.Print();
 
     vector<int> val;
