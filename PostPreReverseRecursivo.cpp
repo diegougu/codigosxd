@@ -1,4 +1,3 @@
-
 #include <iostream>
 using namespace std;
 
@@ -23,15 +22,15 @@ public:
     ~CBinTree();
     bool Insert(int x);
     bool Remove(int x);
-    void Print();
+    void Print1();
     void Print2();
     void Print3();
 private:
     bool Find(int x, CBinNode**& p);
     CBinNode** Rep(CBinNode** p);
-    void InOrder(CBinNode* n);
     void PostOrder(CBinNode* p);
     void Preorder(CBinNode* n);
+    void Reverse(CBinNode* n);
     CBinNode* m_root;
     bool m_b;
 };
@@ -87,32 +86,33 @@ CBinNode** CBinTree::Rep(CBinNode** q)
     return q;
 }
 
-void CBinTree::InOrder(CBinNode* n)
-{
+
+void CBinTree::Reverse(CBinNode* n) {
     if (!n) return;
-    InOrder(n->nodes[0]);
+
+    Reverse(n->nodes[1]);
     cout << n->value << " ";
-    InOrder(n->nodes[1]);
+    Reverse(n->nodes[0]);
 }
 
-void CBinTree::Print()
-{
-    InOrder(m_root);
+
+
+void CBinTree::Print1() {
+    Reverse(m_root);
     cout << endl;
 }
 
 
 void CBinTree::PostOrder(CBinNode* p) {
     if (!p) return;
-    if (p == m_root) {
-    }
-    Preorder(p->nodes[0]);
-    Preorder(p->nodes[1]);
+    PostOrder(p->nodes[0]);
+    PostOrder(p->nodes[1]);
     cout << p->value << " ";
 
 
-
 }
+
+
 void CBinTree::Print2() {
     PostOrder(m_root);
     cout << endl;
@@ -146,7 +146,12 @@ int main()
     t.Insert(96);
     t.Insert(48);
 
+    cout << "Postorder" << endl;
     t.Print2();
+
+    cout << "Preorder" << endl;
     t.Print3();
 
+    cout << "Reverse " << endl;
+    t.Print1();
 }
