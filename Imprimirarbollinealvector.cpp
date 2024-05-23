@@ -1,5 +1,5 @@
+#include <queue>
 #include <iostream>
-#include <vector>
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,16 +22,12 @@ public:
     CBinTree();
     ~CBinTree();
     bool Insert(int x);
-    bool Remove(int x);
     void Print();
-    void Print2(vector<int> valores);
-
+    void Print2();
 private:
+    void printpornivel(CBinNode* n);
     bool Find(int x, CBinNode**& p);
-    CBinNode** Rep(CBinNode** p);
     void InOrder(CBinNode* n);
-    void Filas(vector<int>& valores, CBinNode* ptr, CBinNode* ptr2, CBinNode* ptr3, CBinNode* ptr4);
-
     CBinNode* m_root;
     bool m_b;
 };
@@ -62,30 +58,7 @@ bool CBinTree::Insert(int x)
     *p = new CBinNode(x);
     return 0;
 }
-bool CBinTree::Remove(int x)
-{
-    CBinNode** p;
-    if (!Find(x, p)) return 0;
-    if ((*p)->nodes[0] && (*p)->nodes[1])
-    {
-        CBinNode** q = Rep(p);
-        (*p)->value = (*q)->value;
-        p = q;
-    }
-    CBinNode* t = *p;
-    *p = (*p)->nodes[(*p)->nodes[0] == 0];
-    delete t;
-    return 1;
-}
 
-CBinNode** CBinTree::Rep(CBinNode** q)
-{
-    m_b = !m_b;
-    q = &((*q)->nodes[!m_b]);
-    while ((*q)->nodes[m_b])
-        q = &((*q)->nodes[m_b]);
-    return q;
-}
 
 void CBinTree::InOrder(CBinNode* n)
 {
@@ -102,81 +75,56 @@ void CBinTree::Print()
 }
 
 
-void CBinTree::Filas(vector<int>& valores, CBinNode* ptr, CBinNode* ptr2, CBinNode* ptr3, CBinNode* ptr4) {
-    if (!ptr && !ptr2) return;
 
-    if (ptr == m_root && ptr2 == m_root) {
-        valores.push_back(ptr->value);
-        Filas(valores, ptr->nodes[0], ptr2->nodes[1], ptr3, ptr4);
-        ptr = ptr->nodes[0];
-        ptr2 = ptr2->nodes[1];
-    }
+void CBinTree::printpornivel(CBinNode* n) {
+    queue<CBinNode*> valores;
+    valores.push(n);
+    valores.push(nullptr);
 
-    else {
-        if (ptr != nullptr) {
-            valores.push_back(ptr->value);
-        }
-        
-        if(ptr3 != nullptr){
-            valores.push_back(ptr3->value);
-        }
-        
-        if (ptr2 != nullptr) {
-            valores.push_back(ptr2->value);
-        }
-        
-        if(ptr4 != nullptr){
-            valores.push_back(ptr4->value);
+    while (!valores.empty()) {
+        CBinNode* current = valores.front();
 
+        if (current != nullptr) {
+            cout << current->value << " ";
+            if (current->nodes[0] != nullptr) {
+                valores.push(current->nodes[0]);
+            }
+            if (current->nodes[1] != nullptr) {
+                valores.push(current->nodes[1]);
+            }
+
+            valores.push(nullptr);
+
+            valores.pop();
         }
-        if(ptr == nullptr && ptr3 != nullptr){
-            ptr = ptr3;
+        else if (current == nullptr) {
+            valores.pop();
         }
-        
-        if(ptr != nullptr && ptr3 == nullptr){
-            ptr3 = ptr;
-        }
-        
-        if(ptr2 == nullptr && ptr4 != nullptr){
-            ptr2 = ptr4;
-        }
-        
-        if(ptr2 != nullptr && ptr4 == nullptr){
-            ptr4 = ptr2;
-        }
-        
-        Filas(valores, ptr->nodes[0], ptr2->nodes[0], ptr->nodes[1], ptr2->nodes[1]);
+
     }
 }
 
 
-
-void CBinTree::Print2(vector<int> valores) {
-    CBinNode* ptr3 = nullptr;
-    CBinNode* ptr4 = nullptr;
-
-    Filas(valores, m_root, m_root, ptr3, ptr4);
-
-
-    for (size_t i = 0; i < valores.size(); ++i) {
-        cout << valores[i] << " ";
-    }
+void CBinTree::Print2() {
+    printpornivel(m_root);
+    cout << endl;
 }
 
 
 int main()
 {
     CBinTree t;
-    t.Insert(55);
-    t.Insert(35);
-    t.Insert(77);
+    
+    t.Insert(70);
+    t.Insert(50);
+    t.Insert(100);
     t.Insert(20);
-    t.Insert(1);
+    t.Insert(24);
+    t.Insert(90);
     t.Insert(200);
-    t.Insert(300);
-    t.Print();
+    t.Insert(80);
+    t.Insert(400);
+    t.Insert(500);
 
-    vector<int> val;
-
-    t.Print2(val);
+    t.Print2();
 }
