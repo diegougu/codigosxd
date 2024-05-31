@@ -126,30 +126,36 @@ void priorityq::pop() {
         actual = compara;
         compara = 0;
 
+
         while (true) {
+            CBinNode* p = treevec[0];
+            CBinNode* q = treevec[actual];
 
-            if (actual == 0) {
+            if (q->value > p->value) {
+                swap(p->value, q->value);
                 break;
-            }
-
-            if (actual % 2 == 0) {
-                compara = (actual / 2) - 1;
-            }
-            else if (actual % 2 != 0) {
-                compara = actual / 2;
-            }
-
-
-            CBinNode* p = treevec[actual];
-            CBinNode* q = treevec[compara];
-            if (p->value > q->value) {
-                swap(q->value, p->value);
             }
             else {
-                break;
+
+                if (actual == 0) {
+                    break;
+                }
+
+                if (actual % 2 == 0) {
+                    int temp = (actual / 2) - 1;
+                    actual = temp;
+
+                }
+                else if (actual % 2 != 0) {
+                    int temp = actual / 2;
+                    actual = temp;
+                }
+
             }
-            actual = compara;
+
         }
+
+
 
 
     }
@@ -174,5 +180,6 @@ int main() {
     t.add(20);
     t.add(100);
     t.pop();
+
     t.print();
 }
