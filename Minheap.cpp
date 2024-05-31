@@ -97,68 +97,49 @@ void priorityq::pop() {
     }
     else {
         CBinNode* p = m_root;
-        CBinNode* temp = treevec.back();
         CBinNode* q = treevec.back();
-
         swap(p->value, q->value);
 
-        int actual = treevec.size() - 1;
-        int compara = 0;
+        int borrar = treevec.size() - 1;
+        int rec = 0;
 
-        if (actual == 0) {
-            CBinNode* n = m_root;
-            m_root = nullptr;
-            delete n;
-            return;
+        if (borrar % 2 == 0) {
+            rec = (borrar / 2) - 1;
+        }
+        else if (borrar % 2 != 0) {
+            rec = borrar / 2;
         }
 
-        if (actual % 2 == 0) {
-            compara = (actual / 2) - 1;
+        CBinNode* n = treevec[rec];
+        if (n->nodes[0] == q) {
+            n->nodes[0] = nullptr;
+            delete q;
+            treevec.pop_back();
         }
-        else if (actual % 2 != 0) {
-            compara = actual / 2;
+        else if (n->nodes[1] == q) {
+            n->nodes[1] = nullptr;
+            delete q;
+            treevec.pop_back();
         }
 
-        q = treevec[compara];
-        delete temp;
-        treevec.pop_back();
-
-        actual = compara;
-        compara = 0;
-
-
-        while (true) {
-            CBinNode* p = treevec[0];
-            CBinNode* q = treevec[actual];
-
-            if (q->value < p->value) {
-                swap(p->value, q->value);
-                break;
+        while (p->nodes[0] != nullptr && p->nodes[1] != nullptr) {
+            
+            if ((p->nodes[0]->value < p->value) && (p->nodes[0] != nullptr) && (p->nodes[0]->value < p->nodes[1]->value)) {
+                swap(p->value, p->nodes[0]->value);
+                p = p->nodes[0];
+            }
+            else if ((p->nodes[1]->value < p->value) && (p->nodes[1] != nullptr) && (p->nodes[1]->value < p->nodes[0]->value)) {
+                swap(p->value, p->nodes[1]->value);
+                p = p->nodes[1];
             }
             else {
-
-                if (actual == 0) {
-                    break;
-                }
-
-                if (actual % 2 == 0) {
-                    int temp = (actual / 2) - 1;
-                    actual = temp;
-
-                }
-                else if (actual % 2 != 0) {
-                    int temp = actual / 2;
-                    actual = temp;
-                }
-
+                break;
             }
 
         }
 
-
-
-
     }
+
 }
 
 void priorityq::print() {
@@ -174,13 +155,14 @@ void priorityq::print() {
 int main() {
     priorityq t;
 
-    t.add(10);
-    t.add(20);
-    t.add(30);
     t.add(5);
-
+    t.add(9);
+    t.add(10);
+    t.add(300);
+    t.add(20);
+    t.add(41);
     t.pop();
-
     t.print();
+
 
 }
