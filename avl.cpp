@@ -97,14 +97,14 @@ void CBinTree::calcular_alturaB(CBinNode* n) {
 
 
 void CBinTree::avl(vector<CBinNode*> camino) {
-    
+
     int fin = camino.size() - 1;
     CBinNode* p = camino[fin];
 
     while (true) {
         if (p->altura_balanceo == 2 || p->altura_balanceo == -2) {
-            if (p->altura_balanceo = 2 &&  p->nodes[1] != nullptr && p->nodes[1]->altura_balanceo == 1) {
-                
+            if (p->altura_balanceo = 2 && p->nodes[1] != nullptr && p->nodes[1]->altura_balanceo == 1) {
+
                 CBinNode* b = p->nodes[1];
                 CBinNode* c = p->nodes[1]->nodes[1];
                 if (p == m_root) {
@@ -155,7 +155,7 @@ void CBinTree::avl(vector<CBinNode*> camino) {
                 else {
                     int previo = fin - 1;
                     CBinNode* prev = camino[previo];
-                    prev->nodes[0] = b;
+                    prev->nodes[1] = b;
                     a->nodes[1] = b->nodes[0];
                     b->nodes[0] = a;
                     p->nodes[0] = b->nodes[1];
@@ -178,7 +178,7 @@ void CBinTree::avl(vector<CBinNode*> camino) {
                 else {
                     int previo = fin - 1;
                     CBinNode* prev = camino[previo];
-                    prev->nodes[1] = b;
+                    prev->nodes[0] = b;
                     c->nodes[0] = b->nodes[1];
                     b->nodes[1] = c;
                     p->nodes[1] = b->nodes[0];
@@ -187,7 +187,7 @@ void CBinTree::avl(vector<CBinNode*> camino) {
                 }
             }
         }
-        if (fin == 0) break;  
+        if (fin == 0) break;
         p = camino[--fin];
 
     }
@@ -287,14 +287,11 @@ void CBinTree::Print2() {
 int main()
 {
     CBinTree t;
+    t.Insert(50);
     t.Insert(30);
     t.Insert(20);
-    t.Insert(10);
     t.Insert(25);
-    t.Insert(40);
-    t.Insert(50);
-    t.Insert(35);
-    t.Insert(15);
+    t.Insert(24);
 
 
 
