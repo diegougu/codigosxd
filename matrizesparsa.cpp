@@ -1,6 +1,9 @@
 #include <iostream>
 using namespace std;
 
+struct objx;
+class matrizesparsa;
+
 struct node {
 	int valor;
 	pair<int, int> xy;
@@ -9,7 +12,6 @@ struct node {
 
 	node(int v, pair<int, int> xy2, node* r = nullptr, node* d = nullptr) : valor(v), xy(xy2), right(r), down(d) {}
 };
-
 
 class matrizesparsa {
 public:
@@ -20,9 +22,10 @@ public:
 		}
 	}
 
-	void get(int x, int y);
+	int get(int x, int y);
 	void set(int x, int y, int v);
-	void print();
+	objx operator()(int x, int y);
+	
 private:
 	bool Insert(int x, int y, int v);
 	bool FindRight(node**& p, int y);
@@ -31,6 +34,23 @@ private:
 	static const int tam = 4;
 	node* eje_x[tam];
 	node* eje_y[tam];
+};
+
+struct objx {
+	matrizesparsa* m = nullptr;
+	objx(matrizesparsa* n = nullptr) : m(n) {}
+	pair<int, int> xy;
+	objx operator=(int v) {
+		m->set(xy.first, xy.second, v);
+		return *this;
+	}
+	operator int() {
+		return m->get(xy.first, xy.second);
+	};
+	objx operator=(objx& ox) {
+		m->set(xy.first, xy.second, ox.m->get(ox.xy.first, ox.xy.second));
+		return *this;
+	}
 };
 
 
@@ -83,7 +103,7 @@ bool matrizesparsa::Insert(int x, int y, int v) {
 bool matrizesparsa::Remove(int x, int y, int v) {
 	node** p = &eje_x[x];
 	node** q = &eje_y[y];
-	
+
 	if (FindRight(p, y) && FindDown(q, x)) {
 		node* temp = *p;
 		*p = (*p)->right;
@@ -121,41 +141,65 @@ void matrizesparsa::set(int x, int y, int v) {
 			Insert(x, y, v);
 			return;
 		}
-
 	}
 }
 
 
-void matrizesparsa::get(int x, int y) {
+int matrizesparsa::get(int x, int y) {
 	if (x > tam && y > tam) {
 		cout << "el tamaño pedido sobrepasa al de la matriz" << endl;
-		return;
+		return 0;
 	}
 	node** p = &eje_x[x];
 	node** q = &eje_y[y];
 
 	if (FindRight(p, y)) {
-		cout << (*p)->valor << endl;
-		return;
+		return (*p)->valor;
 	}
 	if (FindDown(q, x)) {
-		cout << (*q)->valor << endl;
-		return;
+		return (*q)->valor;
 	}
 	else {
-		cout << 0 << endl;
-		return;
+		return 0;
 	}
-
-
 }
+
+
+objx matrizesparsa:: operator()(int x, int y) {
+	objx ox(this);
+	pair<int, int> x_y;
+	x_y.first = x;
+	x_y.second = y;
+	ox.xy = x_y;
+	return ox;
+}
+
+
 
 int main() {
 	matrizesparsa t;
-	t.set(0, 0, 4);
-	t.set(2, 0, 10);
-	t.set(1, 0, 5);
-	t.set(1, 0, 0);
-	t.get(1, 0);
+	objx val1 = t(1, 1);
+	objx val2 = t(2, 2);
+	objx val3 = t(3, 3);
+	objx val4 = t(0, 0);
+	cout << (int)val2 << endl;
+	cout << (int)val3 << endl;
+	cout << (int)val4 << endl;
+
+	t(0, 1) = 20;
+	t(1, 0) = 25;
+	t(3, 3) = 30;
+
+	cout << (int)t(0, 1) << endl; 
+	cout << (int)t(1, 0) << endl; 
+	cout << (int)t(3, 3) << endl; 
+
+	t(0, 1) = 0;
+	t(1, 0) = 90;
+	t(3, 3) = 40;
+
+	cout << (int)t(0, 1) << endl; 
+	cout << (int)t(1, 0) << endl; 
+	cout << (int)t(3, 3) << endl; 
 
 }
