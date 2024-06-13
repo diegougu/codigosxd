@@ -3,8 +3,6 @@
 
 using namespace std;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 struct CBinNode
 {
     CBinNode(int _v)
@@ -17,29 +15,21 @@ struct CBinNode
     CBinNode* nodes[2];
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 class CBinTree
 {
 public:
     CBinTree();
-    ~CBinTree();
     bool Insert(int x);
     bool Remove(int x);
     void Print();
 
-    void Print3();
-    void Print2();
+
 private:
     bool Find(int x, CBinNode**& p);
     int alturaP(CBinNode* n);
     void calcular_alturaB(CBinNode* n);
     void recalcular_altura_tree(CBinNode* n);
     void avl(vector<CBinNode*> camino);
-
-    void Printlautra(CBinNode* n);
-    void Printbalance(CBinNode* n);
-
     CBinNode** Rep(CBinNode** p);
     void InOrder(CBinNode* n);
     CBinNode* m_root;
@@ -50,11 +40,6 @@ CBinTree::CBinTree()
 {
     m_root = 0;
     m_b = 0;
-}
-
-CBinTree::~CBinTree()
-{
-    // ?
 }
 
 
@@ -210,17 +195,9 @@ void CBinTree::avl(vector<CBinNode*> camino) {
 
 }
 
-void CBinTree::Printbalance(CBinNode* n) {
-    if (!n) return;
-    Printbalance(n->nodes[0]);
-    cout << n->altura_balanceo << " ";
-    Printbalance(n->nodes[1]);
 
-}
 
-void CBinTree::Print3() {
-    Printbalance(m_root);
-}
+
 
 bool CBinTree::Insert(int x)
 {
@@ -283,21 +260,6 @@ void CBinTree::Print()
     cout << endl;
 }
 
-void CBinTree::Printlautra(CBinNode* n) {
-    if (!n) return;
-
-    Printlautra(n->nodes[0]);
-    cout << n->altura_profundidad << " ";
-    Printlautra(n->nodes[1]);
-
-
-}
-
-void CBinTree::Print2() {
-    Printlautra(m_root);
-}
-
-
 int main()
 {
     CBinTree t;
@@ -310,6 +272,4 @@ int main()
     t.Insert(21);
 
     t.Print();
-
-
 }
