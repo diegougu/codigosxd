@@ -6,10 +6,8 @@
 
 #define VALORNULL -99
 
-
 using namespace std;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct CBinNode
 {
@@ -25,13 +23,10 @@ struct CBinNode
     CBinNode* nodes[2];
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 class CBinTree
 {
 public:
     CBinTree();
-    ~CBinTree();
     bool Insert(int x);
     bool Remove(int x);
     void Print();
@@ -60,11 +55,6 @@ CBinTree::CBinTree()
 {
     m_root = 0;
     m_b = 0;
-}
-
-CBinTree::~CBinTree()
-{
-    // ?
 }
 
 
@@ -116,16 +106,16 @@ void CBinTree::imprimir_arbol(CBinNode* n) {
     int current_alt = 0;
     int espaciado = 0;
     int altura_limite = 0;
-    int root_size = 12;
+    int root_size = 17;
 
 
     printaltura(st, altura_limite);
 
 
     while (!valores.empty()) {
-        
+
         CBinNode* current = valores.front();
-        
+
         current_alt = current->altura_dos;
 
         if (current_alt >= altura_limite) {
@@ -136,7 +126,7 @@ void CBinTree::imprimir_arbol(CBinNode* n) {
             cout << endl;
             root_size = root_size / 2;
         }
-        int mitad = ceil(root_size/ 2);
+        int mitad = ceil(root_size / 2);
         int mitad2 = ceil(root_size / 2);
 
         espaciado = mitad;
@@ -163,7 +153,7 @@ void CBinTree::imprimir_arbol(CBinNode* n) {
             current->nodes[0] = n;
             int a = 0;
             inputsize(m_root, a);
-            
+
         }
         valores.push(current->nodes[0]);
         if (current->nodes[1] != nullptr) {
@@ -290,7 +280,14 @@ void CBinTree::avl(vector<CBinNode*> camino) {
                 else {
                     int previo = fin - 1;
                     CBinNode* prev = camino[previo];
-                    prev->nodes[1] = b;
+                    if (prev->nodes[0] == p) {
+                        prev->nodes[0] = b;
+
+                    }
+                    else if (prev->nodes[1] == p) {
+                        prev->nodes[1] = b;
+
+                    }
                     a->nodes[1] = b->nodes[0];
                     b->nodes[0] = a;
                     p->nodes[0] = b->nodes[1];
@@ -313,7 +310,14 @@ void CBinTree::avl(vector<CBinNode*> camino) {
                 else {
                     int previo = fin - 1;
                     CBinNode* prev = camino[previo];
-                    prev->nodes[0] = b;
+                    if (prev->nodes[0] == p) {
+                        prev->nodes[0] = b;
+
+                    }
+                    else if (prev->nodes[1] == p) {
+                        prev->nodes[1] = b;
+
+                    }
                     c->nodes[0] = b->nodes[1];
                     b->nodes[1] = c;
                     p->nodes[1] = b->nodes[0];
@@ -330,6 +334,8 @@ void CBinTree::avl(vector<CBinNode*> camino) {
     calcular_alturaB(m_root);
 
 }
+
+
 
 
 
@@ -395,17 +401,16 @@ void CBinTree::Print()
 }
 
 
-
 int main()
 {
     CBinTree t;
     t.Insert(50);
     t.Insert(30);
     t.Insert(20);
-    t.Insert(25);
+    t.Insert(35);
+    t.Insert(37);
     t.Insert(24);
-
-
+    t.Insert(21);
 
     t.Print();
 
