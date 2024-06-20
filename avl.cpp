@@ -101,7 +101,14 @@ void CBinTree::avl(vector<CBinNode*> camino) {
                 else {
                     int previo = fin - 1;
                     CBinNode* prev = camino[previo];
-                    prev->nodes[1] = b;
+                    if (prev->nodes[0] == p) {
+                        prev->nodes[0] = b;
+
+                    }
+                    else if (prev->nodes[1] == p) {
+                        prev->nodes[1] = b;
+
+                    }
                     p->nodes[1] = b->nodes[0];
                     b->nodes[0] = p;
                     break;
@@ -119,7 +126,14 @@ void CBinTree::avl(vector<CBinNode*> camino) {
                 else {
                     int previo = fin - 1;
                     CBinNode* prev = camino[previo];
-                    prev->nodes[0] = b;
+                    if (prev->nodes[0] == p) {
+                        prev->nodes[0] = b;
+
+                    }
+                    else if (prev->nodes[1] == p) {
+                        prev->nodes[1] = b;
+
+                    }
                     p->nodes[0] = b->nodes[1];
                     b->nodes[1] = p;
                     break;
@@ -263,13 +277,14 @@ void CBinTree::Print()
 int main()
 {
     CBinTree t;
-    t.Insert(50);
-    t.Insert(30);
-    t.Insert(20);
-    t.Insert(35);
-    t.Insert(37);
-    t.Insert(24);
-    t.Insert(21);
+    t.Insert(1);
+    t.Insert(8);
+    t.Insert(9);
+    t.Insert(4);
+    t.Insert(7);
+    t.Insert(6);
+    t.Insert(2);
+    t.Insert(3);
 
     t.Print();
 }
