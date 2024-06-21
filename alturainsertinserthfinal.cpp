@@ -89,15 +89,17 @@ bool CAvlTree::Insert(int x)
 
     int tam = cam.size() - 1;
     CBinNode* rt = cam[tam];
-    while (!cam.empty() && tam - 1 != -1) {
+    while (!cam.empty()) {
         int nueva_altura = calcular_altura(rt);
         rt->height = nueva_altura;
         cam.pop_back();
         tam = cam.size() - 1;
+        if (tam == -1) {
+            break;
+        }
+
         rt = cam[tam];
     }
-    int raiz = calcular_altura(root);
-    root->height = raiz;
 
 
     return 1;
