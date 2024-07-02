@@ -1,8 +1,7 @@
 #include <iostream>
 #include <forward_list>
 #include <vector>
-#include <deque>
-#include <tuple>
+#include <stack>
 using namespace std;
 struct CEdge
 {
@@ -34,7 +33,7 @@ public:
     void InsEdge(int idn1, int idn2, int v);
     void RemNode(int idn);
     void RemEdge(int idn1, int idn2, int v);
-    bool find_arr_rep(tuple<int, int, char > rep, deque<tuple<int, int, char >> arristas_visitadas);
+    bool find_arr_rep(CEdge ite, vector<CEdge> aristas_visitadas);
     void Print();
     void camino_euleriano();
     vector<CNode> nodes;
@@ -65,70 +64,53 @@ void CGraph::Print()
     }
 }
 
-bool CGraph::find_arr_rep(tuple<int, int, char > rep, deque<tuple<int, int, char >> arristas_visitadas) {
-    if (arristas_visitadas.empty()) {
+bool CGraph::find_arr_rep(CEdge ite, vector<CEdge> aristas_visitadas) {
+    if (aristas_visitadas.empty()) {
         return false;
     }
-    for (size_t i = 0; i < arristas_visitadas.size(); i++) {
-        int arr = get<0>(rep);
-        int val = get<1>(rep);
-        char a = get<2>(rep);
 
-        tuple<int, int, char > s = arristas_visitadas[i];
-        int arr2 = get<0>(s);
-        int val2 = get<1>(s);
-        char a2 = get<2>(s);
-
-        if (arr == arr2 && val == val2 && a == a2) {
+    for (size_t i = 0; i < aristas_visitadas.size(); i++) {
+        if (ite.id_node == aristas_visitadas[i].id_node && ite.value == aristas_visitadas[i].value) {
             return true;
         }
-
     }
     return false;
 }
 
-
 void CGraph::camino_euleriano() {
     int ini = 0;
-    deque<tuple<int, int, char >> arristas_visitadas;
+    vector<CEdge> aristas_visitadas;
     vector<char> camino;
-    deque<tuple<int, int , char>> arristas;
+    stack<CEdge> aristas;
     camino.push_back(nodes[ini].value);
+
     for (auto& e : nodes[ini].edges) {
-        int arr = e.id_node;
-        int val = e.value;
-        char a = nodes[arr].value;
-        arristas.push_front(make_tuple(arr, val, a));
+        aristas.push(e);
     }
 
-    while (!arristas.empty()) {
-        tuple<int, int, char> ite = arristas.front();
-        int arr = get<0>(ite);
-        int val = get<1>(ite);
-        char node_char = get<2>(ite);
-        ini = arr;
-        
-        if (find_arr_rep(ite, arristas_visitadas)) {
-            arristas.pop_front();
+    while (!aristas.empty()) {
+        CEdge ite = aristas.top();
+        ini = ite.id_node;
+        if (find_arr_rep(ite, aristas_visitadas)) {
+            aristas.pop();
         }
         else {
-            camino.push_back(node_char);
-            arristas_visitadas.push_back(ite);
-            arristas.pop_front();
+            camino.push_back(nodes[ini].value);
+            aristas.pop();
+            aristas_visitadas.push_back(ite);
             for (auto& e : nodes[ini].edges) {
-                int arr = e.id_node;
-                int val = e.value;
-                char a = nodes[arr].value;
-                arristas.push_front(make_tuple(arr, val, a));
+                aristas.push(e);
             }
         }
-
     }
+
     for (size_t i = 0; i < camino.size(); i++) {
-        cout << camino[i] << "->";
+        cout << camino[i];
+        if (i < camino.size() - 1) {
+            cout << " -> ";
+        }
     }
-
-
+    cout << endl;
 }
 
 
@@ -137,20 +119,15 @@ void CGraph::camino_euleriano() {
 int main()
 {
     CGraph g;
-    g.InsNode('B');    g.InsNode('A');
-    g.InsNode('G');    g.InsNode('C');
+    g.InsNode('A'); g.InsNode('B'); g.InsNode('C'); g.InsNode('D'); g.InsNode('E');
 
-    g.InsEdge(0, 1, 3);
-    g.InsEdge(0, 2, 5);
-    g.InsEdge(1, 2, 7);
-    g.InsEdge(2, 3, 4);
-    g.InsEdge(3, 0, 20);
-
+    g.InsEdge(0, 1, 5);  
+    g.InsEdge(1, 2, 4);  
+    g.InsEdge(2, 0, 3);  
+    g.InsEdge(2, 3, 10);  
+    g.InsEdge(3, 4, 12);  
+    g.InsEdge(4, 2, 34); 
 
     g.Print();
     g.camino_euleriano();
-
-
-
-    return 0;
 }
