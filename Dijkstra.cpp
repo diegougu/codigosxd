@@ -56,7 +56,7 @@ void CGraph::Print() {
 }
 
 void CGraph::Dijkstra(int start) {
-    int INF = 1000000000; // Using a large number instead of numeric_limits<int>::max()
+    int INF = 1000000000;
     vector<int> dist(nodes.size(), INF);
     vector<bool> visited(nodes.size(), false);
     dist[start] = 0;
@@ -64,14 +64,12 @@ void CGraph::Dijkstra(int start) {
     for (size_t i = 0; i < nodes.size(); ++i) {
         int u = -1;
 
-        // Find the unvisited node with the smallest distance
         for (size_t j = 0; j < nodes.size(); ++j) {
             if (!visited[j] && (u == -1 || dist[j] < dist[u])) {
                 u = j;
             }
         }
 
-        // If we couldn't find a node, break from the loop
         if (dist[u] == INF) {
             break;
         }
@@ -90,10 +88,10 @@ void CGraph::Dijkstra(int start) {
 
     for (size_t i = 0; i < dist.size(); ++i) {
         if (dist[i] == INF) {
-            cout << "Distance from " << nodes[start].value << " to " << nodes[i].value << " is: INF" << endl;
+            cout << nodes[start].value << " to " << nodes[i].value << " " << endl;
         }
         else {
-            cout << "Distance from " << nodes[start].value << " to " << nodes[i].value << " is: " << dist[i] << endl;
+            cout << nodes[start].value << " to " << nodes[i].value << " " << dist[i] << endl;
         }
     }
 }
@@ -128,7 +126,7 @@ int main() {
     g.InsEdge(8, 10, 2);
     g.Print();
 
-    g.Dijkstra(0); // Start Dijkstra's algorithm from node 0 ('A')
+    g.Dijkstra(0); // inicio osea el A
 
     return 0;
 }
