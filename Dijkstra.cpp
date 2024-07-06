@@ -1,11 +1,13 @@
 #include <iostream>
 #include <forward_list>
 #include <vector>
+#include <queue>
+#include <utility>
+
 using namespace std;
-struct CEdge
-{
-    CEdge(int idn = -1, int v = 0)
-    {
+
+struct CEdge {
+    CEdge(int idn = -1, int v = 0) {
         id_node = idn;
         value = v;
     }
@@ -13,10 +15,8 @@ struct CEdge
     int value;
 };
 
-struct CNode
-{
-    CNode(int id = -1, char v = 0)
-    {
+struct CNode {
+    CNode(int id = -1, char v = 0) {
         id_node = id;
         value = v;
     }
@@ -25,102 +25,110 @@ struct CNode
     forward_list<CEdge> edges;
 };
 
-class CGraph
-{
+class CGraph {
 public:
     void InsNode(char v);
     void InsEdge(int idn1, int idn2, int v);
     void RemNode(int idn);
     void RemEdge(int idn1, int idn2, int v);
     void Print();
-    void Dijkstra_recursivo(int actual, vector<bool>& visitado, vector<int>& camino, int final);
     void Dijkstra(int start);
     vector<CNode> nodes;
 };
 
-void CGraph::InsNode(char v)
-{
+void CGraph::InsNode(char v) {
     CNode n(nodes.size(), v);
     nodes.push_back(n);
 }
 
-void CGraph::InsEdge(int idn1, int idn2, int v)
-{
+void CGraph::InsEdge(int idn1, int idn2, int v) {
     CEdge e(idn2, v);
     nodes[idn1].edges.push_front(e);
 }
 
-void CGraph::Print()
-{
-    for (auto n : nodes)
-    {
+void CGraph::Print() {
+    for (auto& n : nodes) {
         cout << n.value << " ";
-        for (auto e : n.edges)
+        for (auto& e : n.edges)
             cout << "->" << nodes[e.id_node].value << " " << e.value;
         cout << "\n";
     }
 }
 
-void CGraph::Dijkstra_recursivo(int actual, vector<bool>& visitado, vector<int>& camino, int final) {
-    visitado[actual] = true;
-
-    if (nodes[actual].id_node == nodes[final].id_node) {
-        return;
-    }
-
-    for (auto& e : nodes[actual].edges) {
-        int peso_ar = e.value;
-        int id = e.id_node;
-        if (camino[actual] + peso_ar < camino[id]) {
-            camino[id] = camino[actual] + peso_ar;
-            //cout << camino[id] << "pos-> " << id << " ";
-        }
-    }
-
-    int next_node = -1;
-    int min = INT_MAX;
+void CGraph::Dijkstra(int start) {
+    int INF = 1000000000; // Using a large number instead of numeric_limits<int>::max()
+    vector<int> dist(nodes.size(), INF);
+    vector<bool> visited(nodes.size(), false);
+    dist[start] = 0;
 
     for (size_t i = 0; i < nodes.size(); ++i) {
-        if (!visitado[i] && camino[i] < min) {
-            min = camino[i];
-            next_node = i;
+        int u = -1;
+
+        // Find the unvisited node with the smallest distance
+        for (size_t j = 0; j < nodes.size(); ++j) {
+            if (!visited[j] && (u == -1 || dist[j] < dist[u])) {
+                u = j;
+            }
+        }
+
+        // If we couldn't find a node, break from the loop
+        if (dist[u] == INF) {
+            break;
+        }
+
+        visited[u] = true;
+
+        for (const CEdge& edge : nodes[u].edges) {
+            int v = edge.id_node;
+            int weight = edge.value;
+
+            if (dist[u] + weight < dist[v]) {
+                dist[v] = dist[u] + weight;
+            }
         }
     }
 
-
-    if (next_node != -1) {
-        Dijkstra_recursivo(next_node, visitado, camino, final);
+    for (size_t i = 0; i < dist.size(); ++i) {
+        if (dist[i] == INF) {
+            cout << "Distance from " << nodes[start].value << " to " << nodes[i].value << " is: INF" << endl;
+        }
+        else {
+            cout << "Distance from " << nodes[start].value << " to " << nodes[i].value << " is: " << dist[i] << endl;
+        }
     }
-
 }
 
-
-void CGraph::Dijkstra(int start) {
-    vector<bool> visitado(nodes.size(), false);
-    vector<int> camino(nodes.size(), INT_MAX);
-    camino[start] = 0;
-    int final = nodes[nodes.size() - 1].id_node;
-    Dijkstra_recursivo(start, visitado, camino, final);
-    for (size_t i = 0; i < camino.size(); i++) {
-        cout << nodes[i].value << " " << camino[i] << "->";
-    }
-
-
-
-}
-
-int main()
-{
+int main() {
     CGraph g;
-    g.InsNode('A');    g.InsNode('B');
-    g.InsNode('C');    g.InsNode('D');
-    g.InsNode('X');
-    g.InsEdge(0, 1, 3);    g.InsEdge(0, 2, 7); //A
-    g.InsEdge(1, 3, 4);    g.InsEdge(1, 2, 2); //B
-    g.InsEdge(2, 3, 1);    g.InsEdge(2, 4, 5); //C
+    g.InsNode('A'); //0
+    g.InsNode('B'); //1
+    g.InsNode('C'); //2
+    g.InsNode('D'); //3
+    g.InsNode('E'); //4
+    g.InsNode('F'); //5
+    g.InsNode('G'); //6
+    g.InsNode('H'); //7
+    g.InsNode('I'); //8
+    g.InsNode('J'); //9
+    g.InsNode('K'); //10
+    g.InsEdge(0, 1, 2);
+    g.InsEdge(0, 2, 4);
+    g.InsEdge(1, 2, 5);
+    g.InsEdge(1, 3, 3);
+    g.InsEdge(2, 9, 2);
+    g.InsEdge(2, 5, 3);
+    g.InsEdge(3, 9, 5);
+    g.InsEdge(5, 9, 3);
+    g.InsEdge(9, 6, 2);
+    g.InsEdge(9, 4, 2);
+    g.InsEdge(6, 10, 6);
+    g.InsEdge(4, 7, 1);
+    g.InsEdge(4, 8, 1);
+    g.InsEdge(7, 10, 3);
+    g.InsEdge(8, 10, 2);
     g.Print();
 
-    g.Dijkstra(0);
+    g.Dijkstra(0); // Start Dijkstra's algorithm from node 0 ('A')
 
     return 0;
 }
